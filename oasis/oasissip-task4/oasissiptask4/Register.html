@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>   
+    <link rel="stylesheet" href="Register.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+        </style>
+    <title>Registration</title>
+</head>
+<body>
+    <div class="container">
+        <div id="tri"></div>
+        <div id="img">
+                
+        </div>
+        <div class="card">
+            <h2 class="h2">Registration</h2>
+
+            <form action="#">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="name" placeholder="Enter your Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" id="email" placeholder="Enter your Username or Email">
+                    <p id="registererrormessage"></p>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" placeholder="Enter your Password">
+                    <p id="registerpassworderror"></p>
+                </div>
+                <div class="text-center">
+                    <button type="button" onclick="saveData()" class="button" id="save_btn">Submit</button>
+                    <button type="reset" class="button2" id="">Reset</button>
+                </div>
+                <div class="already">
+                    <p class="p1">Already have an account?</p>
+                    <a href="login.html">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    function saveData(){
+        let name,email,password;
+        name=document.getElementById("name").value;
+        email=document.getElementById("email").value;
+        password=document.getElementById("password").value;
+        let registerpassworderrorEl=document.getElementById("registerpassworderror");
+        let registerErrorMessageEl = document.getElementById("registererrormessage");
+
+        // localStorage.setItem("name",name);
+        // localStorage.setItem("email",email);
+        // localStorage.setItem("password",password);
+        function isValidPassword(password) {
+         return /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(password);
+        }
+
+        function isUsernameAvailable(email) {
+         return !localStorage.getItem(email);
+        }
+
+
+        let user_records=new Array();
+        user_records=JSON.parse(localStorage.getItem("users"))?JSON.parse(localStorage.getItem("users")):[]
+        if(user_records.some((v)=>{
+            return v.email==email
+        })){
+            registererrormessage.textContent="Username already taken";
+        }else if (!isUsernameAvailable(email)){
+            registererrormessage.textContent = 'Username already exists. Please choose a different username.';
+        } 
+        else if (!isValidPassword(password)) {
+        registerpassworderror.textContent = 'Please enter an alphanumeric password of at least 8 characters.';
+        }      
+        else{
+            user_records.push({
+                "name":name,
+                "email":email,
+                "password":password
+            })
+            localStorage.setItem("users",JSON.stringify(user_records));
+            window.location.href="login.html";
+        }
+
+    }
+</script>
+</html>
